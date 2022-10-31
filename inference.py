@@ -111,6 +111,7 @@ def datagen(frames, mels):
 			
 			cropped = []
 			detector = MTCNN()
+			print('Let\'s go')
 			for i in range(0, len(frames)):
 				image = cv2.cvtColor(frames[i], cv2.COLOR_BGR2RGB)
 				result = detector.detect_faces(image)
@@ -142,6 +143,7 @@ def datagen(frames, mels):
 	
 
 	##process and adapted frames with audio file
+	print('ok')
 	for i, m in enumerate(mels):
 		idx = 0 if args.static else i%len(frames)
 		frame_to_save = frames[idx].copy() ##original frame
