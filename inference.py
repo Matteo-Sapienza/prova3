@@ -111,7 +111,7 @@ def datagen(frames, mels):
 			
 			cropped = []
 			detector = MTCNN()
-			for i in range(0, 3):
+			for i in range(0, len(frames)):
 				image = cv2.cvtColor(frames[i], cv2.COLOR_BGR2RGB)
 				result = detector.detect_faces(image)
 				if result != []:
