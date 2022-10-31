@@ -185,6 +185,10 @@ def datagen(frames, mels):
 ##defining variable and device
 mel_step_size = 16
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+if device == 'cuda':
+	torch.cuda.synchronize()
+	start = torch.cuda.Event(enable_timing=True)
+	end = torch.cuda.Event(enable_timing=True)
 print('Using {} for inference.'.format(device))
 
 ##load and return checkpoint for model Wav2Lip
@@ -284,6 +288,7 @@ def main():
 	full_frames = full_frames[:len(mel_chunks)]
 
 	batch_size = args.wav2lip_batch_size
+	start.record()
 	gen = datagen(full_frames.copy(), mel_chunks) ##returns the generator for lists: img_batch(faces), mel_batch(audio), frame_batch(original frames), coords_batch(coords of faces)
 
 	##np.ceil(a) => return all the elemnt of 'a' list, rounded on top (es 0.1 => 1)
@@ -319,6 +324,11 @@ def main():
 			out.write(f) ##save all on the temp file ('temp/result.avi')
 
 	out.release()
+	end.record()
+	
+	torch.cuda.synchronize()
+
+	print('Time: ', start.elapsed_time(end))
 
 	#save the temp file ('temp/result.avi') on the output path (default: 'results/result_voice.mp4')
 	command = 'ffmpeg -y -i {} -i {} -strict -2 -q:v 1 {}'.format(args.audio, 'temp/result.avi', args.outfile)
