@@ -146,7 +146,7 @@ def datagen(frames, mels):
 		idx = 0 if args.static else i%len(frames)
 		frame_to_save = frames[idx].copy() ##original frame
 		face = cropped[idx].copy()
-		coords = face_det_results[idx].copy()
+		coords = face_det_results[idx]
 		#face, coords = face_det_results[idx].copy() ##cropped frame + coords
 
 		face = cv2.resize(face, (args.img_size, args.img_size)) ##args.img_size = 96 (by default)  [why?]
